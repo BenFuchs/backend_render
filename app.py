@@ -133,6 +133,7 @@ def logout():
     blacklist_item = tokenBlacklist(token=jti)
     db.session.add(blacklist_item)
     db.session.commit()
+    
     return send_from_directory('../frontend','index.html'), 200  
 
 def allowed_file(filename):
@@ -249,14 +250,28 @@ def show_users():
 @jwt_required()
 def del_book(book_id):
     logged_user = get_jwt_identity()
-    admin_emails = Users.query.filter_by(Role='Admin').first()
-    if logged_user == admin_emails.Email:
+    logged_role=logged_user['role']
+    print(logged_role)
+    admin_user = Users.query.filter_by(Role='Admin').first()
+    print(admin_user)
+    
+    if logged_role == admin_user.Role:
         book = db.session.execute(db.select(Books).filter_by(id=book_id)).scalars().first()
         if book:
-            print(book_id)
+            print(f"Book found: {book_id}")
+            print(f"Current Active status: {book.Active}")
             book.Active = 0
             db.session.commit()
-    return "test"
+            print(f"Updated Active status: {book.Active}")
+            return jsonify({"msg": "Book deactivated successfully"}), 200
+        else:
+            print(f"Book not found: {book_id}")
+            return jsonify({"msg": "Book not found"}), 404
+    else:
+        print(f"Unauthorized access attempt by: {logged_user}")
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    
 
 @api.route('/loanBook/<int:book_id>', methods=['POST'])
 @jwt_required()
