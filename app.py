@@ -134,7 +134,7 @@ def logout():
     db.session.add(blacklist_item)
     db.session.commit()
     
-    return send_from_directory('../frontend','index.html'), 200  
+    return jsonify(message="Successfully logged out"), 200  
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
