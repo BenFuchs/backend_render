@@ -312,14 +312,14 @@ def update_book(book_id):
             new_bookName = request.form['bookName']
             new_bookAuthor = request.form['bookAuthor']
             new_bookPublished = request.form['bookPublished']
-            new_img = request.files.get('image')
+            # new_img = request.files.get('image')
 
-            # Save the new image
-            if new_img:
-                filename = secure_filename(new_img.filename)
-                image_path = os.path.join(UPLOAD_FOLDER, filename)
-                new_img.save(image_path)
-                book.book_image_path = filename
+            # # Save the new image
+            # if new_img:
+            #     filename = secure_filename(new_img.filename)
+            #     image_path = os.path.join(UPLOAD_FOLDER, filename)
+            #     new_img.save(image_path)
+            #     book.book_image_path = filename
 
             book.bookName = new_bookName
             book.bookAuthor = new_bookAuthor
